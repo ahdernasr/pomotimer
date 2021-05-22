@@ -14,11 +14,11 @@ const Pomo = () => {
     statusRef,
     studyStatus,
     sessionsDone,
+    timePassed,
     timeLeft;
 
   let muteSounds = false;
   let pause = true;
-
 
   baseTimerLabel = useRef();
   baseTimerPathRemaining = useRef();
@@ -26,53 +26,51 @@ const Pomo = () => {
   statusRef = useRef();
   studyStatus = useRef();
 
-
   function sound(src) {
-        this.sound = document.createElement("audio");
-        this.sound.src = src;
-        this.sound.setAttribute("preload", "auto");
-        this.sound.setAttribute("controls", "none");
-        this.sound.style.display = "none";
-        document.body.appendChild(this.sound);
-        this.play = async function () {
-          this.sound.play();
-        };
-        this.stop = async function () {
-          this.sound.pause();
-        };
-      }
-    
-      let rainSounds = new sound("/sounds/rain.mp3");
-      let alarmSounds = new sound("/sounds/alarm.mp3");
-    
-      function pausePlayHandler(e) {
-        if (e.target.classList.contains("fa-play")) {
-          e.target.classList.add("fa-pause");
-          e.target.classList.remove("fa-play");
-          pause = false;
-          if (!muteSounds) rainSounds.play();
-        } else {
-          e.target.classList.remove("fa-pause");
-          e.target.classList.add("fa-play");
-          pause = true;
-          rainSounds.stop();
-        }
-      }
-    
-      function muteHandler(e) {
-        if (e.target.classList.contains("fa-volume-up")) {
-          e.target.classList.add("fa-volume-mute");
-          e.target.classList.remove("fa-volume-up");
-          muteSounds = false;
-          if (!pause) rainSounds.play();
-        } else {
-          e.target.classList.add("fa-volume-up");
-          e.target.classList.remove("fa-volume-mute");
-          muteSounds = true;
-          rainSounds.stop();
-        }
-      }
+    this.sound = document.createElement("audio");
+    this.sound.src = src;
+    this.sound.setAttribute("preload", "auto");
+    this.sound.setAttribute("controls", "none");
+    this.sound.style.display = "none";
+    document.body.appendChild(this.sound);
+    this.play = async function () {
+      this.sound.play();
+    };
+    this.stop = async function () {
+      this.sound.pause();
+    };
+  }
 
+  let rainSounds = new sound("/sounds/rain.mp3");
+  let alarmSounds = new sound("/sounds/alarm.mp3");
+
+  function pausePlayHandler(e) {
+    if (e.target.classList.contains("fa-play")) {
+      e.target.classList.add("fa-pause");
+      e.target.classList.remove("fa-play");
+      pause = false;
+      if (!muteSounds) rainSounds.play();
+    } else {
+      e.target.classList.remove("fa-pause");
+      e.target.classList.add("fa-play");
+      pause = true;
+      rainSounds.stop();
+    }
+  }
+
+  function muteHandler(e) {
+    if (e.target.classList.contains("fa-volume-up")) {
+      e.target.classList.add("fa-volume-mute");
+      e.target.classList.remove("fa-volume-up");
+      muteSounds = false;
+      if (!pause) rainSounds.play();
+    } else {
+      e.target.classList.add("fa-volume-up");
+      e.target.classList.remove("fa-volume-mute");
+      muteSounds = true;
+      rainSounds.stop();
+    }
+  }
 
   useEffect(() => {
     //RUN TIMER ONCE ON START
@@ -85,67 +83,67 @@ const Pomo = () => {
       return `${minutes}:${seconds}`;
     };
 
-    let startingTime = formatTimeLeft(interval*60)
-    baseTimerLabel.current.innerHTML = startingTime
+    let startingTime = formatTimeLeft(interval * 60);
+    baseTimerLabel.current.innerHTML = startingTime;
 
     let inStudy = true;
     sessionsDone = 1;
-    function startTimer() {
-      let timePassed = 0;
-      timeLeft = TIME_LIMIT;
-      
-      const countdown = () => {
-        if (timerContinue && !pause) {
-          timePassed = timePassed += 1;
-          timeLeft = TIME_LIMIT - timePassed;
-        }
-        if (timeLeft === 0) {
-          if (sessionsDone < sessions) {
-            if (inStudy) {
-              console.log(1)
-              TIME_LIMIT = breaks * 60;
-              statusRef.current.textContent = "Break time";
-              inStudy = false;
-              alarmSounds.play();
-              startTimer();
-              clearCountdown();
-              return;
-            } else {
-              sessionsDone += 1
-              TIME_LIMIT = interval * 60;
-              console.log(sessionsDone)
-              sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
-              statusRef.current.textContent = "Studying";
-              inStudy = true;
-              alarmSounds.stop();
-              startTimer();
-              clearCountdown();
-              return;
-            }
+
+    const countdown = () => {
+      if (timerContinue && !pause) {
+        timePassed = timePassed += 1;
+        timeLeft = TIME_LIMIT - timePassed;
+      }
+      if (timeLeft === 0) {
+        if (sessionsDone < sessions) {
+          if (inStudy) {
+            console.log(1);
+            TIME_LIMIT = breaks * 60;
+            statusRef.current.textContent = "Break time";
+            inStudy = false;
+            alarmSounds.play();
+            startTimer();
+            clearCountdown();
+            return;
+          } else {
+            sessionsDone += 1;
+            TIME_LIMIT = interval * 60;
+            console.log(sessionsDone);
+            sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
+            statusRef.current.textContent = "Studying";
+            inStudy = true;
+            alarmSounds.stop();
+            startTimer();
+            clearCountdown();
+            return;
           }
-          clearCountdown();
-          baseTimerLabel.current.textContent = "--:--";
-          baseTimerPathRemaining.current.setAttribute(
-            "stroke-dasharray",
-            "283 283"
-          );
-          studyStatus.current.innerHTML = `
-          <span ref={statusRef} className="status">
-          Finished!
-          </span>
-          `;
-          alarmSounds.play();
-          return;
         }
-        baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
-        setCircleDasharray();
+        clearCountdown();
+        baseTimerLabel.current.textContent = "--:--";
+        baseTimerPathRemaining.current.setAttribute(
+          "stroke-dasharray",
+          "283 283"
+        );
+        studyStatus.current.innerHTML = `
+        <span ref={statusRef} className="status">
+        Finished!
+        </span>
+        `;
+        alarmSounds.play();
+        return;
       }
+      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
+      setCircleDasharray();
+    };
 
-      let timerInterval = setInterval(countdown, 1000)
+    let timerInterval = setInterval(countdown, 1000);
 
-      const clearCountdown = () => {
-        clearInterval(timerInterval)
-      }
+    const clearCountdown = () => {
+      clearInterval(timerInterval);
+    };
+    function startTimer() {
+      timePassed = 0;
+      timeLeft = TIME_LIMIT;
     }
 
     const COLOR_CODES = {
@@ -173,6 +171,11 @@ const Pomo = () => {
     }
 
     startTimer();
+    return () => {
+      clearCountdown();
+      alarmSounds.stop()
+      rainSounds.stop()
+    };
   }, []);
 
   return (
@@ -228,7 +231,6 @@ const Pomo = () => {
           <h2 className="session-info choices">
             <i className="fas fa-play" onClick={pausePlayHandler}></i>
             <i className="fas fa-volume-mute" onClick={muteHandler}></i>
-            <i className="fas fa-redo"></i>
           </h2>
         </div>
       </div>
