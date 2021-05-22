@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
 import { Link } from 'react-router-dom'
+import { timerInterval } from './Pomo.js'
 
 const Navbar = () => {
+
     return ( 
     <div className="navbar">
         <h1>Pomodoro Timer</h1>

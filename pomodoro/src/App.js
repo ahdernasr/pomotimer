@@ -13,7 +13,7 @@ function App() {
       <Route exact path="/">
         <Home />
       </Route>
-      <Route exact path="/session">
+      <Route path="/session/:interval/:breaks/:sessions">
         <Pomo />
       </Route>
       <Route path="*">

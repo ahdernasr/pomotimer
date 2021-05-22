@@ -1,67 +1,62 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useState } from "react";
-import Pomo from "./Pomo";
+import { Link } from "react-router-dom";
 
-let timerSettings;
 
 const Home = () => {
-  const [ button, setButton] = useState(false);
 
-  const handleSubmit = () => {
-    setButton(true)
-    timerSettings = {
-      break: document.getElementById("break").value,
-      interval: document.getElementById("interval").value,
-      sessions: document.getElementById("sessions").value,
-    };
-    // console.log(timerSettings)
+  let [breaks, setBreaks ] = useState(0.2)
+  let [interval, setIntervals ] = useState(0.1)
+  let [sessions, setSessions ] = useState(3)
 
-    // history.push({
-    //     pathname: '/session',
-    //     state: [timerSettings] // your data array of objects
-    //   });
-  };
   return (
     <div className="home">
-      {!button && (
+      {
         <div className="base">
           <div className="base-content">
             <h1>Take a </h1>
             <input
+              onChange={(e) => setBreaks(e.target.value)}
               id="break"
               type="number"
               required
               min="1"
-              defaultValue="10"
+              defaultValue="0.2"
             />
             <h1> minute break every</h1>
             <input
+              onChange={(e) => setIntervals(e.target.value)}
               id="interval"
               type="number"
               required
               min="1"
-              defaultValue="50"
+              defaultValue="0.1"
             />
             <h1> minutes.</h1>
           </div>
           <div className="base-content">
             <h1># of sessions</h1>
             <input
+              onChange={(e) => setSessions(e.target.value)}
               id="sessions"
               type="number"
               required
               min="1"
               max="12"
-              defaultValue="5"
+              defaultValue="3"
             />
           </div>
           <div className="base-content">
-            <button className="start-button" onClick={handleSubmit}>
+            <Link
+              to={`/session/${interval}/${breaks}/${sessions}`}
+              className="start-button"
+            >
               START
-            </button>
+            </Link>
           </div>
         </div>
-      )}
-      {button && <Pomo data={timerSettings}> </Pomo>}
+      }
+      {/* {button && <Pomo data={timerSettings}> </Pomo>} */}
     </div>
   );
 };
