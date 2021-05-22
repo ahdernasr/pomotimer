@@ -72,7 +72,7 @@ body {
 
 }
 
-.base {
+.base-home {
   height: 80%;
   padding: 1rem;
   width: 70%;
@@ -84,27 +84,47 @@ body {
   flex-direction: column;
 }
 
+.base {
+  height: 80%;
+  padding: 1rem;
+  width: 70%;
+  min-width: 50rem;
+  margin: 1rem auto 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+}
+
 /* Home page styles  */
+
+.base-home-content {
+  width: 100%;
+  height: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .base-content {
   width: 100%;
   height: 30%;
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
 }
 
-.base-content h1 {
+.base-home-content h1 {
   margin: 0.5rem;
   color: #e6e6e6;
 }
 
-.base-content input {
+.base-home-content input {
   margin: 0.5rem;
   width: 4%;
   height: 20%;
   text-align: center;
-  font-size: 25px;
+  font-size: 1rem;
   font-weight: 500;
   border: 2px solid #bb96fc;
   border-radius: 0.75rem;
@@ -114,7 +134,7 @@ body {
   transition: 0.2s outline;
 }
 
-.base-content input:focus {
+.base-home-content input:focus {
   outline: none !important;
   box-shadow: 0 0 3px #e6e6e6;
   border: 2.5px solid #bb96fc;
@@ -124,8 +144,8 @@ body {
 }
 
 
-.base-content input::-webkit-outer-spin-button,
-.base-content input::-webkit-inner-spin-button {
+.base-home-content input::-webkit-outer-spin-button,
+.base-home-content input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -157,12 +177,15 @@ body {
 
 .top {
   height: 65%;
+  margin-top: 2rem;
 }
 
 .bottom {
   height: 35%;
   display: flex;
   justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
 }
 
 .session-info {
@@ -170,9 +193,15 @@ body {
   letter-spacing: 2px;
   color: #bb96fc;
   background-color: #505050;
-  padding: 0.7rem;
   border-radius: 0.35rem;
+  padding: 0.5rem 0.75rem;
+  width: 60%;
+  margin: 1rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 
 /* Timer */
 

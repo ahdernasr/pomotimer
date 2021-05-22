@@ -142,12 +142,14 @@ const Pomo = () => {
           </div>
         </div>
         <div className="base-content bottom">
+          <h2 id="study-status" className="session-info">Studying</h2>
           <h2 className="session-info">
-            <i className="fas fa-coffee"></i> {breaks} <span style={{'font-size': '20px', 'padding': 'none'}}>min</span>
+            {breaks}min break
           </h2>
           <h2 ref={sessionsRef} className="session-info">
             # 1/{sessions}
           </h2>
+
         </div>
       </div>
     </div>

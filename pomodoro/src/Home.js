@@ -12,8 +12,8 @@ const Home = () => {
   return (
     <div className="home">
       {
-        <div className="base">
-          <div className="base-content">
+        <div className="base-home">
+          <div className="base-home-content">
             <h1>Take a </h1>
             <input
               onChange={(e) => setBreaks(e.target.value)}
@@ -34,7 +34,7 @@ const Home = () => {
             />
             <h1> minutes.</h1>
           </div>
-          <div className="base-content">
+          <div className="base-home-content">
             <h1># of sessions</h1>
             <input
               onChange={(e) => setSessions(e.target.value)}
@@ -46,7 +46,7 @@ const Home = () => {
               defaultValue="3"
             />
           </div>
-          <div className="base-content">
+          <div className="base-home-content">
             <Link
               to={`/session/${interval}/${breaks}/${sessions}`}
               className="start-button"
