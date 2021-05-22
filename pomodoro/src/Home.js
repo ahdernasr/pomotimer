@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
 
-  let [breaks, setBreaks ] = useState(0.2)
-  let [interval, setIntervals ] = useState(0.1)
-  let [sessions, setSessions ] = useState(3)
+  let [breaks, setBreaks ] = useState(10)
+  let [interval, setIntervals ] = useState(50)
+  let [sessions, setSessions ] = useState(5)
 
   return (
     <div className="home">
@@ -21,7 +21,7 @@ const Home = () => {
               type="number"
               required
               min="1"
-              defaultValue="0.2"
+              defaultValue="10"
             />
             <h1> minute break every</h1>
             <input
@@ -30,7 +30,7 @@ const Home = () => {
               type="number"
               required
               min="1"
-              defaultValue="0.1"
+              defaultValue="50"
             />
             <h1> minutes.</h1>
           </div>
@@ -43,7 +43,7 @@ const Home = () => {
               required
               min="1"
               max="12"
-              defaultValue="3"
+              defaultValue="5"
             />
           </div>
           <div className="base-home-content">

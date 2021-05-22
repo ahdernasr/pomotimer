@@ -124,7 +124,7 @@ body {
   width: 4%;
   height: 20%;
   text-align: center;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   border: 2px solid #bb96fc;
   border-radius: 0.75rem;
@@ -194,7 +194,7 @@ body {
   color: #bb96fc;
   background-color: #505050;
   border-radius: 0.35rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.75rem 0.75rem;
   width: 60%;
   margin: 1rem 0;
   display: flex;
@@ -202,7 +202,63 @@ body {
   align-items: center;
 }
 
+.choices {
+  display: flex;
+  justify-content: space-evenly;
+}
 
+.choices i:hover {
+  cursor: pointer;
+  opacity: 80%;
+}
+
+.one {
+  opacity: 0;
+  -webkit-animation: dot 1.3s infinite;
+  -webkit-animation-delay: 0.0s;
+  animation: dot 1.3s infinite;
+  animation-delay: 0.0s;
+}
+
+.two {
+  opacity: 0;
+  -webkit-animation: dot 1.3s infinite;
+  -webkit-animation-delay: 0.2s;
+  animation: dot 1.3s infinite;
+  animation-delay: 0.2s;
+}
+
+.three {
+  opacity: 0;
+  -webkit-animation: dot 1.3s infinite;
+  -webkit-animation-delay: 0.3s;
+  animation: dot 1.3s infinite;
+  animation-delay: 0.3s;
+}
+
+@-webkit-keyframes dot {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+@keyframes dot {
+  0% {
+      opacity: 0;
+  }
+  50% {
+      opacity: 0;
+  }
+  100% {
+      opacity: 1;
+  }
+}
 /* Timer */
 
 /* Sets the containers height and width */
