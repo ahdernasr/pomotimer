@@ -7,15 +7,15 @@ const Pomo = () => {
 
   let TIME_LIMIT = interval * 60,
     timerContinue = true,
+    sessionsDone = 1,
+    timePassed = 0,
     baseTimerLabel,
     baseTimerPathRemaining,
     remainingPathColor,
     sessionsRef,
     statusRef,
     studyStatus,
-    sessionsDone,
     timerInterval,
-    timePassed,
     timeLeft;
 
   let muteSounds = false;
@@ -74,102 +74,14 @@ const Pomo = () => {
   }
 
   useEffect(() => {
-    //RUN TIMER ONCE ON START
-    // const formatTimeLeft = (time) => {
-    //   const minutes = Math.floor(time / 60);
-    //   let seconds = time % 60;
-    //   if (seconds < 10) {
-    //     seconds = `0${seconds}`;
-    //   }
-    //   return `${minutes}:${seconds}`;
-    // };
-    // let startingTime = formatTimeLeft(interval * 60);
-    // baseTimerLabel.current.innerHTML = startingTime;
-    // let inStudy = true;
-    // sessionsDone = 1;
-    // const clearCountdown = () => {
-    //   clearInterval(timerInterval);
-    // };
-    // function startTimer() {
-    //   timePassed = 0;
-    //   timeLeft = TIME_LIMIT;
+    
+    let startingTime = formatTimeLeft(interval * 60),
+    inStudy = true,
+    stopAlarm = false,
+    countdown;
 
-    //   const countdown = () => {
-    //   console.log('countdown')
-    //   if (timerContinue && !pause) {
-    //     timePassed = timePassed += 1;
-    //     timeLeft = TIME_LIMIT - timePassed;
-    //   }
-    //   if (timeLeft === 0) {
-    //     if (sessionsDone < sessions) {
-    //       if (inStudy) {
-    //         console.log(1);
-    //         TIME_LIMIT = breaks * 60;
-    //         statusRef.current.textContent = "Break time";
-    //         inStudy = false;
-    //         alarmSounds.play();
-    //         startTimer();
-    //         clearCountdown();
-    //         return;
-    //       } else {
-    //         sessionsDone += 1;
-    //         TIME_LIMIT = interval * 60;
-    //         console.log(sessionsDone);
-    //         sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
-    //         statusRef.current.textContent = "Studying";
-    //         inStudy = true;
-    //         alarmSounds.stop();
-    //         startTimer();
-    //         clearCountdown();
-    //         return;
-    //       }
-    //     }
-    //     clearCountdown();
-    //     baseTimerLabel.current.textContent = "--:--";
-    //     baseTimerPathRemaining.current.setAttribute(
-    //       "stroke-dasharray",
-    //       "283 283"
-    //     );
-    //     studyStatus.current.innerHTML = `
-    //     <span ref={statusRef} className="status">
-    //     Finished!
-    //     </span>
-    //     `;
-    //     alarmSounds.play();
-    //     return;
-    //   }
-    //   baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
-    //   setCircleDasharray();
-    // };
-    // }
-    // let timerInterval = setInterval(countdown, 1000);
-    // const COLOR_CODES = {
-    //   info: {
-    //     color: "green",
-    //   },
-    // }
-    // remainingPathColor = COLOR_CODES.info.color;
-    // function calculateTimeFraction() {
-    //   const rawTimeFraction = timeLeft / TIME_LIMIT;
-    //   return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
-    // }
-
-    // let FULL_DASH_ARRAY = 283;
-    // function setCircleDasharray() {
-    //   const circleDasharray = `${(
-    //     calculateTimeFraction() * FULL_DASH_ARRAY
-    //   ).toFixed(0)} 283`;
-    //   baseTimerPathRemaining.current.setAttribute(
-    //     "stroke-dasharray",
-    //     circleDasharray
-    //   );
-    // }
-    // startTimer();
-    // return () => {
-    //   clearCountdown();
-    //   alarmSounds.stop()
-    //   rainSounds.stop()
-    // };
+    timeLeft = TIME_LIMIT;
+    baseTimerLabel.current.innerHTML = startingTime;
 
     function formatTimeLeft(time) {
       const minutes = Math.floor(time / 60);
@@ -180,20 +92,11 @@ const Pomo = () => {
       return `${minutes}:${seconds}`;
     }
 
-    const TIME_LIMIT = 20;
-    let timePassed = 0;
-    let timeLeft = TIME_LIMIT;
-    let startingTime = formatTimeLeft(interval * 60);
-    baseTimerLabel.current.innerHTML = startingTime;
-    let inStudy = true;
-    sessionsDone = 1;
-
     function startTimer() {
       timePassed = 0;
       timeLeft = TIME_LIMIT;
 
-      const countdown = () => {
-        console.log("countdown");
+      countdown = () => {
         if (timerContinue && !pause) {
           timePassed = timePassed += 1;
           timeLeft = TIME_LIMIT - timePassed;
@@ -204,25 +107,23 @@ const Pomo = () => {
               TIME_LIMIT = breaks * 60;
               statusRef.current.textContent = "Break time";
               inStudy = false;
-              alarmSounds.play();
-              startTimer();
-              clearCountdown();
+              alarmSounds.play().then(() => {
+                startTimer();
+                clearCountdown();
+              })
               return;
             } else {
               sessionsDone += 1;
               TIME_LIMIT = interval * 60;
-              console.log(sessionsDone);
               sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
               statusRef.current.textContent = "Studying";
               inStudy = true;
-              alarmSounds.stop();
               startTimer();
               clearCountdown();
               return;
             }
           }
           clearCountdown();
-          baseTimerLabel.current.textContent = "--:--";
           baseTimerPathRemaining.current.setAttribute(
             "stroke-dasharray",
             "283 283"
@@ -232,14 +133,17 @@ const Pomo = () => {
         Finished!
         </span>
         `;
-          alarmSounds.play();
+        baseTimerLabel.current.textContent = "--:--";
+          timerContinue = false;
+          if(!stopAlarm) alarmSounds.play()
+          stopAlarm = true;
           return;
         }
+        baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
         setCircleDasharray();
       };
 
-      console.log('here')
-      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft)
+      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
       timerInterval = setInterval(countdown, 1000);
     }
 
@@ -250,7 +154,8 @@ const Pomo = () => {
     startTimer();
 
     function calculateTimeFraction() {
-      return timeLeft / TIME_LIMIT;
+      const rawTimeFraction = timeLeft / TIME_LIMIT;
+      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
     }
 
     let FULL_DASH_ARRAY = 283;
@@ -262,11 +167,6 @@ const Pomo = () => {
         "stroke-dasharray",
         circleDasharray
       );
-    }
-
-    function calculateTimeFraction() {
-      const rawTimeFraction = timeLeft / TIME_LIMIT;
-      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
     }
 
     return () => {
