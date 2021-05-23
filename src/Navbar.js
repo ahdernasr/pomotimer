@@ -5,7 +5,7 @@ const Navbar = () => {
 
     return ( 
     <div className="navbar">
-        <h1>Pomodoro Timer</h1>
+        <h1>Pomotimer</h1>
         <div>
             <Link to="/" className="links fas fa-home"></Link>
             <a href="https://www.github.com/ahdernasr" className="links fab fa-github"></a>

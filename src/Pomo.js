@@ -32,6 +32,7 @@ const Pomo = () => {
     this.sound.src = src;
     this.sound.setAttribute("preload", "auto");
     this.sound.setAttribute("controls", "none");
+    this.sound.crossOrigin = 'anonymous';
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
     this.play = async function () {
@@ -115,6 +116,7 @@ const Pomo = () => {
             } else {
               sessionsDone += 1;
               TIME_LIMIT = interval * 60;
+              console.log(sessionsDone);
               sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
               statusRef.current.textContent = "Studying";
               inStudy = true;
@@ -153,11 +155,6 @@ const Pomo = () => {
 
     startTimer();
 
-    function calculateTimeFraction() {
-      const rawTimeFraction = timeLeft / TIME_LIMIT;
-      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
-    }
-
     let FULL_DASH_ARRAY = 283;
     function setCircleDasharray() {
       const circleDasharray = `${(
@@ -167,6 +164,11 @@ const Pomo = () => {
         "stroke-dasharray",
         circleDasharray
       );
+    }
+
+    function calculateTimeFraction() {
+      const rawTimeFraction = timeLeft / TIME_LIMIT;
+      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
     }
 
     return () => {
