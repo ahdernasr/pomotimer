@@ -14,6 +14,7 @@ const Pomo = () => {
     statusRef,
     studyStatus,
     sessionsDone,
+    timerInterval,
     timePassed,
     timeLeft;
 
@@ -74,92 +75,185 @@ const Pomo = () => {
 
   useEffect(() => {
     //RUN TIMER ONCE ON START
-    const formatTimeLeft = (time) => {
+    // const formatTimeLeft = (time) => {
+    //   const minutes = Math.floor(time / 60);
+    //   let seconds = time % 60;
+    //   if (seconds < 10) {
+    //     seconds = `0${seconds}`;
+    //   }
+    //   return `${minutes}:${seconds}`;
+    // };
+    // let startingTime = formatTimeLeft(interval * 60);
+    // baseTimerLabel.current.innerHTML = startingTime;
+    // let inStudy = true;
+    // sessionsDone = 1;
+    // const clearCountdown = () => {
+    //   clearInterval(timerInterval);
+    // };
+    // function startTimer() {
+    //   timePassed = 0;
+    //   timeLeft = TIME_LIMIT;
+
+    //   const countdown = () => {
+    //   console.log('countdown')
+    //   if (timerContinue && !pause) {
+    //     timePassed = timePassed += 1;
+    //     timeLeft = TIME_LIMIT - timePassed;
+    //   }
+    //   if (timeLeft === 0) {
+    //     if (sessionsDone < sessions) {
+    //       if (inStudy) {
+    //         console.log(1);
+    //         TIME_LIMIT = breaks * 60;
+    //         statusRef.current.textContent = "Break time";
+    //         inStudy = false;
+    //         alarmSounds.play();
+    //         startTimer();
+    //         clearCountdown();
+    //         return;
+    //       } else {
+    //         sessionsDone += 1;
+    //         TIME_LIMIT = interval * 60;
+    //         console.log(sessionsDone);
+    //         sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
+    //         statusRef.current.textContent = "Studying";
+    //         inStudy = true;
+    //         alarmSounds.stop();
+    //         startTimer();
+    //         clearCountdown();
+    //         return;
+    //       }
+    //     }
+    //     clearCountdown();
+    //     baseTimerLabel.current.textContent = "--:--";
+    //     baseTimerPathRemaining.current.setAttribute(
+    //       "stroke-dasharray",
+    //       "283 283"
+    //     );
+    //     studyStatus.current.innerHTML = `
+    //     <span ref={statusRef} className="status">
+    //     Finished!
+    //     </span>
+    //     `;
+    //     alarmSounds.play();
+    //     return;
+    //   }
+    //   baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
+    //   setCircleDasharray();
+    // };
+    // }
+    // let timerInterval = setInterval(countdown, 1000);
+    // const COLOR_CODES = {
+    //   info: {
+    //     color: "green",
+    //   },
+    // }
+    // remainingPathColor = COLOR_CODES.info.color;
+    // function calculateTimeFraction() {
+    //   const rawTimeFraction = timeLeft / TIME_LIMIT;
+    //   return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+    // }
+
+    // let FULL_DASH_ARRAY = 283;
+    // function setCircleDasharray() {
+    //   const circleDasharray = `${(
+    //     calculateTimeFraction() * FULL_DASH_ARRAY
+    //   ).toFixed(0)} 283`;
+    //   baseTimerPathRemaining.current.setAttribute(
+    //     "stroke-dasharray",
+    //     circleDasharray
+    //   );
+    // }
+    // startTimer();
+    // return () => {
+    //   clearCountdown();
+    //   alarmSounds.stop()
+    //   rainSounds.stop()
+    // };
+
+    function formatTimeLeft(time) {
       const minutes = Math.floor(time / 60);
       let seconds = time % 60;
       if (seconds < 10) {
         seconds = `0${seconds}`;
       }
       return `${minutes}:${seconds}`;
-    };
+    }
 
+    const TIME_LIMIT = 20;
+    let timePassed = 0;
+    let timeLeft = TIME_LIMIT;
     let startingTime = formatTimeLeft(interval * 60);
     baseTimerLabel.current.innerHTML = startingTime;
-
     let inStudy = true;
     sessionsDone = 1;
 
-    const countdown = () => {
-      if (timerContinue && !pause) {
-        timePassed = timePassed += 1;
-        timeLeft = TIME_LIMIT - timePassed;
-      }
-      if (timeLeft === 0) {
-        if (sessionsDone < sessions) {
-          if (inStudy) {
-            console.log(1);
-            TIME_LIMIT = breaks * 60;
-            statusRef.current.textContent = "Break time";
-            inStudy = false;
-            alarmSounds.play();
-            startTimer();
-            clearCountdown();
-            return;
-          } else {
-            sessionsDone += 1;
-            TIME_LIMIT = interval * 60;
-            console.log(sessionsDone);
-            sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
-            statusRef.current.textContent = "Studying";
-            inStudy = true;
-            alarmSounds.stop();
-            startTimer();
-            clearCountdown();
-            return;
-          }
+    function startTimer() {
+      timePassed = 0;
+      timeLeft = TIME_LIMIT;
+
+      const countdown = () => {
+        console.log("countdown");
+        if (timerContinue && !pause) {
+          timePassed = timePassed += 1;
+          timeLeft = TIME_LIMIT - timePassed;
         }
-        clearCountdown();
-        baseTimerLabel.current.textContent = "--:--";
-        baseTimerPathRemaining.current.setAttribute(
-          "stroke-dasharray",
-          "283 283"
-        );
-        studyStatus.current.innerHTML = `
+        if (timeLeft === 0) {
+          if (sessionsDone < sessions) {
+            if (inStudy) {
+              TIME_LIMIT = breaks * 60;
+              statusRef.current.textContent = "Break time";
+              inStudy = false;
+              alarmSounds.play();
+              startTimer();
+              clearCountdown();
+              return;
+            } else {
+              sessionsDone += 1;
+              TIME_LIMIT = interval * 60;
+              console.log(sessionsDone);
+              sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
+              statusRef.current.textContent = "Studying";
+              inStudy = true;
+              alarmSounds.stop();
+              startTimer();
+              clearCountdown();
+              return;
+            }
+          }
+          clearCountdown();
+          baseTimerLabel.current.textContent = "--:--";
+          baseTimerPathRemaining.current.setAttribute(
+            "stroke-dasharray",
+            "283 283"
+          );
+          studyStatus.current.innerHTML = `
         <span ref={statusRef} className="status">
         Finished!
         </span>
         `;
-        alarmSounds.play();
-        return;
-      }
-      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
-      setCircleDasharray();
-    };
+          alarmSounds.play();
+          return;
+        }
+        setCircleDasharray();
+      };
 
-    let timerInterval = setInterval(countdown, 1000);
+      console.log('here')
+      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft)
+      timerInterval = setInterval(countdown, 1000);
+    }
 
     const clearCountdown = () => {
       clearInterval(timerInterval);
     };
-    function startTimer() {
-      timePassed = 0;
-      timeLeft = TIME_LIMIT;
-    }
 
-    const COLOR_CODES = {
-      info: {
-        color: "green",
-      },
-    };
+    startTimer();
 
-    remainingPathColor = COLOR_CODES.info.color;
     function calculateTimeFraction() {
-      const rawTimeFraction = timeLeft / TIME_LIMIT;
-      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+      return timeLeft / TIME_LIMIT;
     }
 
     let FULL_DASH_ARRAY = 283;
-
     function setCircleDasharray() {
       const circleDasharray = `${(
         calculateTimeFraction() * FULL_DASH_ARRAY
@@ -170,11 +264,15 @@ const Pomo = () => {
       );
     }
 
-    startTimer();
+    function calculateTimeFraction() {
+      const rawTimeFraction = timeLeft / TIME_LIMIT;
+      return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+    }
+
     return () => {
       clearCountdown();
-      alarmSounds.stop()
-      rainSounds.stop()
+      alarmSounds.stop();
+      rainSounds.stop();
     };
   }, []);
 

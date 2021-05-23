@@ -35,7 +35,7 @@ const Home = () => {
             <h1> minutes.</h1>
           </div>
           <div className="base-home-content">
-            <h1>Number of sessions: </h1>
+            <h1># of sessions</h1>
             <input
               onChange={(e) => setSessions(e.target.value)}
               id="sessions"
