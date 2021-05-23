@@ -10,7 +10,6 @@ const Navbar = () => {
             <Link to="/" className="links fas fa-home"></Link>
             <a href="https://www.github.com/ahdernasr" className="links fab fa-github"></a>
             {/* <a className="links fas fa-sun"></a> */}
-            <i className="links fas fa-moon"></i>
         </div>
     </div> 
     );
