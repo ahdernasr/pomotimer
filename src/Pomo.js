@@ -172,9 +172,9 @@ const Pomo = () => {
     }
 
     return () => {
-      clearCountdown();
       alarmSounds.stop();
       rainSounds.stop();
+      clearInterval(timerInterval);
     };
   }, []);
 
