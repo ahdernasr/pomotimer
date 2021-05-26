@@ -79,6 +79,7 @@ const Pomo = () => {
     let startingTime = formatTimeLeft(interval * 60),
     inStudy = true,
     stopAlarm = false,
+    stopRunning = false,
     countdown;
 
     timeLeft = TIME_LIMIT;
@@ -106,7 +107,7 @@ const Pomo = () => {
           if (sessionsDone < sessions) {
             if (inStudy) {
               TIME_LIMIT = breaks * 60;
-              statusRef.current.textContent = "Break time";
+              if (!stopRunning) statusRef.current.textContent = "Break time";
               inStudy = false;
               alarmSounds.play().then(() => {
                 startTimer();
@@ -116,36 +117,37 @@ const Pomo = () => {
             } else {
               sessionsDone += 1;
               TIME_LIMIT = interval * 60;
-              console.log(sessionsDone);
-              sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
-              statusRef.current.textContent = "Studying";
+              if (!stopRunning) sessionsRef.current.innerHTML = `# ${sessionsDone}/${sessions}`;
+              if (!stopRunning) statusRef.current.textContent = "Studying";
               inStudy = true;
-              startTimer();
-              clearCountdown();
+              alarmSounds.play().then(() => {
+                startTimer();
+                clearCountdown();
+              })
               return;
             }
           }
           clearCountdown();
-          baseTimerPathRemaining.current.setAttribute(
+          if (!stopRunning) baseTimerPathRemaining.current.setAttribute(
             "stroke-dasharray",
             "283 283"
           );
-          studyStatus.current.innerHTML = `
+          if (!stopRunning) studyStatus.current.innerHTML = `
         <span ref={statusRef} className="status">
         Finished!
         </span>
         `;
-        baseTimerLabel.current.textContent = "--:--";
+        if (!stopRunning) baseTimerLabel.current.textContent = "--:--";
           timerContinue = false;
           if(!stopAlarm) alarmSounds.play()
           stopAlarm = true;
           return;
         }
-        baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
+        if (!stopRunning) baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
         setCircleDasharray();
       };
 
-      baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
+      if (!stopRunning) baseTimerLabel.current.innerHTML = formatTimeLeft(timeLeft);
       timerInterval = setInterval(countdown, 1000);
     }
 
@@ -160,7 +162,7 @@ const Pomo = () => {
       const circleDasharray = `${(
         calculateTimeFraction() * FULL_DASH_ARRAY
       ).toFixed(0)} 283`;
-      baseTimerPathRemaining.current.setAttribute(
+      if (!stopRunning) baseTimerPathRemaining.current.setAttribute(
         "stroke-dasharray",
         circleDasharray
       );
@@ -172,6 +174,7 @@ const Pomo = () => {
     }
 
     return () => {
+      stopRunning = true;
       alarmSounds.stop();
       rainSounds.stop();
       clearInterval(timerInterval);
